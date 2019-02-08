@@ -33,6 +33,7 @@ class Post(Model):
     average_sentiment_score = DecimalField(decimal_places=3)
     title = TextField()
     content = TextField()
+    topic_id = BigIntegerField()
 
     class Meta:
         database = postgres_db

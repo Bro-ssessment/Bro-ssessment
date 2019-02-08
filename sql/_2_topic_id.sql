@@ -1,0 +1,1 @@
+ALTER TABLE posts ADD_COLUMN topic_id BIGINT;
