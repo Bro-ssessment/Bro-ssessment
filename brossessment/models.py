@@ -29,10 +29,11 @@ class Post(Model):
     post_id = BigIntegerField(primary_key=True)
     class_id = ForeignKeyField(Class, null=True)
     user_id = ForeignKeyField(User, null=True)
-    build_on = ForeignKeyField('self')
+    builds_on = ForeignKeyField('self', related_name='builds_on')
     average_sentiment_score = DecimalField(decimal_places=3)
     title = TextField()
     content = TextField()
+    topic_id = BigIntegerField()
 
     class Meta:
         database = postgres_db
