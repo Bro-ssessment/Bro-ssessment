@@ -37,7 +37,7 @@ def parseSheet(filePath, classid):
     sheet = wb.sheet_by_index(2)
     labels = getSheetLabels(sheet)
 
-
+    userSet = set()
     labelToCellList = []
     for row in range(1,sheet.nrows):
         # Get a list of cell values for the row
@@ -55,21 +55,27 @@ def parseSheet(filePath, classid):
                     cell = None
             labelToCell[label] = cell
 
+        userSet.add(labelToCell["PersonID"])
+
         if labelToCell["BuildsOn"] == 0:
             labelToCell["BuildsOn"] == None
         content = labelToCell["NoteContents"]
-        if content != "" and content is not None:
-            labelToCellList.append(labelToCell)
+        if content is None:
+            labelToCell["NoteContents"] = ""
+        labelToCellList.append(labelToCell)
 
     # Make users
     with postgres_db.atomic():
-        for labelToCell in labelToCellList:
-            #if user DNE create user
-            user_id = labelToCell["PersonID"]
+        for user_id in userSet:
             query = User.select().where(User.user_id == user_id)
             if not query.exists():
-                user = User.create(user_id=user_id)
+                User.insert(user_id=user_id).execute()
 
+    with postgres_db.atomic():
+        for labelToCell in labelToCellList:
+            #if user DNE create user
+
+            user_id = labelToCell["PersonID"]
             # Get post values
             post_id = labelToCell["NoteID"]
             class_id = classid
@@ -79,7 +85,9 @@ def parseSheet(filePath, classid):
             topic_id = labelToCell["TopicID"]
 
             #print(post_id)
-            Post.insert(post_id=post_id, class_id=class_id, user_id=user_id, title=title, content=content, topic_id=topic_id)
+
+            query = Post.insert(post_id=post_id, class_id=class_id, user_id=user_id, title=title, content=content, topic_id=topic_id)
+            query.execute()
 
     with postgres_db.atomic():
         for labelToCell in labelToCellList:
