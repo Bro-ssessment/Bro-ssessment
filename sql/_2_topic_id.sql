@@ -1,1 +1,1 @@
-ALTER TABLE posts ADD_COLUMN topic_id BIGINT;
+ALTER TABLE posts ADD COLUMN topic_id BIGINT;
