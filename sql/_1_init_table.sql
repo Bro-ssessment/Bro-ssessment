@@ -12,7 +12,7 @@ CREATE TABLE posts (
     post_id BIGINT PRIMARY KEY,
     class_id BIGINT REFERENCES classes(class_id) NOT NULL,
     user_id BIGINT REFERENCES users(user_id) NOT NULL,
-    builds_on BIGINT REFERENCES posts(post_id),
+    build_on BIGINT REFERENCES posts(post_id),
     title TEXT,
     content TEXT,
     sentiment_score NUMERIC(3)
