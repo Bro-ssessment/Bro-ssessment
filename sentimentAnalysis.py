@@ -53,11 +53,3 @@ class SentimentAnalysis:
     def get_compound(self, vader_text):
         compound = vader_text.find('compound')
         return (float(vader_text[compound + 11:-1]))
-
-def main():
-    print('entered')
-    sentiment = SentimentAnalysis()
-    print(sentiment.vaderAnalysis("The phone is super cool."))
-    print(sentiment.vaderAnalysis("The food here is good!"))
-    posts = ["The phone is super cool.", "The food here is good!"]
-    sentiment.textBlobAnalyses(posts)
