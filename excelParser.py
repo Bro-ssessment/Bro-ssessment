@@ -142,3 +142,15 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+def main(argv):
+
+    wbName = argv[0]
+
+    wb = open_workbook(wbName)
+    sheets = wb.sheets()
+    colNames = getColNames(sheet)
+
+    return 0
+
