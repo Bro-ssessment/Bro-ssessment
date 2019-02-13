@@ -29,16 +29,16 @@ def main(begin_post_id=0, batch_size=100):
 
 
 
-        # with postgres_db.atomic():
-        #     for key, value in result.items():
-        #         query = Post.update(
-        #              vader_sentiment_score=value['score'],
-        #
-        #         ).where(Post.post_id == key)
-        #         query.execute()
-        #
-        # time.sleep(5)  # take a break to prevent rate limit
-        # begin_post_id = current_chunk[-1].post_id
+        with postgres_db.atomic():
+            for key, value in result.items():
+                query = Post.update(
+                     vader_sentiment_score=value['score'],
+
+                ).where(Post.post_id == key)
+                query.execute()
+
+        time.sleep(5)  # take a break to prevent rate limit
+        begin_post_id = current_chunk[-1].post_id
 
 
 def analyze_sentiment(content):
