@@ -15,9 +15,13 @@ class SentimentAnalysis:
     #https://medium.com/analytics-vidhya/simplifying-social-media-sentiment-analysis-using-vader-in-python-f9e6ec6fc52f
     # takes a text input, returns polarity as (negative, neutral, positive)
     def vaderAnalysis(self, text):
+        #print(text)
         score = analyzer.polarity_scores(text)
+        #print('this is the score')
+        #print(str(score))
         #print("{:-<40} {}".format(text, str(score)))
         return str(score)
+
 
 #https://textblob.readthedocs.io/en/dev/quickstart.html
 # goes through list and evaluates each and returns average of everything
@@ -30,7 +34,7 @@ class SentimentAnalysis:
             lines += 1
 
         average_polarity = polarity/lines
-        print("the polarity of {} is {}".format(posts, average_polarity))
+        #print("the polarity of {} is {}".format(posts, average_polarity))
 
         # returns an average of the polarity of the list
         return average_polarity
@@ -41,7 +45,7 @@ class SentimentAnalysis:
         clean_blob = blob.correct()
         post_sentiment = blob.sentiment.polarity
         polarity += post_sentiment
-        print("the polarity of {} is {}".format(text, polarity))
+        #print("the polarity of {} is {}".format(text, polarity))
         return polarity
 
     def comparisonAnalyses(self, text):
@@ -50,6 +54,7 @@ class SentimentAnalysis:
         vader_score = self.get_compound(vader)
         return (textBlob - vader_score)
 
-    def get_compound(self, vader_text):
+    def get_compound(self, text):
+        vader_text = self.vaderAnalysis(text)
         compound = vader_text.find('compound')
         return (float(vader_text[compound + 11:-1]))
