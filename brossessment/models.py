@@ -9,7 +9,7 @@ postgres_db = PostgresqlDatabase(POSTGRES_DB, host=POSTGRES_HOST, port=POSTGRES_
 
 class User(Model):
     user_id = BigIntegerField(primary_key=True)
-    average_sentiment_score = DecimalField(decimal_places=3)
+    average_sentiment_score = FloatField()
 
     class Meta:
         database = postgres_db
@@ -18,7 +18,7 @@ class User(Model):
 
 class Class(Model):
     class_id = BigIntegerField(primary_key=True)
-    average_sentiment_score = DecimalField(decimal_places=3)
+    average_sentiment_score = FloatField()
 
     class Meta:
         database = postgres_db
@@ -29,10 +29,17 @@ class Post(Model):
     post_id = BigIntegerField(primary_key=True)
     class_id = ForeignKeyField(Class, null=True)
     user_id = ForeignKeyField(User, null=True)
-    build_on = ForeignKeyField('self')
+
+    builds_on = ForeignKeyField('self', related_name='builds_on')
+    google_sentiment_score = FloatField()
+    google_sentiment_magnitude = FloatField()
+    textblob_sentiment_score = FloatField()
+    vader_sentiment_score = FloatField()
+    builds_on = ForeignKeyField('self')
     average_sentiment_score = DecimalField(decimal_places=3)
     title = TextField()
     content = TextField()
+    topic_id = BigIntegerField()
 
     class Meta:
         database = postgres_db
