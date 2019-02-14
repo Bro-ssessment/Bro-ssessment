@@ -5,13 +5,12 @@ import argparse
 from brossessment.models import Post, postgres_db
 from sentimentAnalysis import SentimentAnalysis
 
-
+sentiment = SentimentAnalysis()
 def main(begin_post_id=0, batch_size=100):
-    sentiment = SentimentAnalysis()
     while True:
         current_chunk = get_chunk(begin_post_id, batch_size)
 
-        print('Fetching sentiment score from {} to {}'.format(current_chunk[0].post_id, current_chunk[-1].post_id))
+        #print('Fetching sentiment score from {} to {}'.format(current_chunk[0].post_id, current_chunk[-1].post_id))
 
         result = {}
         for post in current_chunk:
@@ -23,28 +22,30 @@ def main(begin_post_id=0, batch_size=100):
 
             try:
                 polarity = analyze_sentiment(content)
+                result[post_id] = {'post_id': post_id, 'polarity': polarity}
+                print(result[post_id])
             except Exception:
                 print('{} fail to fetch sentiment score'.format(post_id))
 
-            result[post_id] = {'post_id': post_id, 'score': score}
-            print(result[post_id])
+
 
         with postgres_db.atomic():
             for key, value in result.items():
                 query = Post.update(
                      textblob_sentiment_score=value['score'],
-
+        
                 ).where(Post.post_id == key)
                 query.execute()
-
+        
         time.sleep(5)  # take a break to prevent rate limit
         begin_post_id = current_chunk[-1].post_id
 
 
 def analyze_sentiment(content):
-    '''Return the sentiment analysis score 
+    '''Return the sentiment analysis score
     '''
-    sentiment.textBlobAnalyses(content)
+    polarity = sentiment.textBlobAnalyses(content)
+    return polarity
 
 
 def get_chunk(begin_post_id=0, limit=500):
