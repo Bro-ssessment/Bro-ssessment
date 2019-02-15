@@ -23,7 +23,7 @@ def main(begin_post_id=0, batch_size=100):
             try:
                 polarity = analyze_sentiment(content)
                 result[post_id] = {'post_id': post_id, 'polarity': polarity}
-                print(result[post_id])
+                #print(result[post_id])
             except Exception:
                 print('{} fail to fetch sentiment score'.format(post_id))
 
@@ -32,20 +32,20 @@ def main(begin_post_id=0, batch_size=100):
         with postgres_db.atomic():
             for key, value in result.items():
                 query = Post.update(
-                     vader_sentiment_score=value['polarity'],
+                     textblob_sentiment_score=value['polarity'],
 
                 ).where(Post.post_id == key)
                 query.execute()
 
-        #time.sleep(5)  # take a break to prevent rate limit
+        time.sleep(5)  # take a break to prevent rate limit
         begin_post_id = current_chunk[-1].post_id
 
 
 def analyze_sentiment(content):
     '''Return the sentiment analysis score
     '''
-    compound = sentiment.get_compound(content)
-    return compound
+    polarity = sentiment.textBlobAnalyses(content)
+    return polarity
 
 
 def get_chunk(begin_post_id=0, limit=500):

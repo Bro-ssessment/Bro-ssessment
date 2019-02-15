@@ -42,7 +42,7 @@ class SentimentAnalysis:
     def textBlobAnalyses(self, text):
         polarity = 0
         blob = TextBlob(text)
-        clean_blob = blob.correct()
+        #clean_blob = blob.correct()
         post_sentiment = blob.sentiment.polarity
         polarity += post_sentiment
         #print("the polarity of {} is {}".format(text, polarity))
