@@ -86,8 +86,12 @@ def parseSheet(filePath, classid):
 
             # private can equal 0 or 1, the excel sheets have 0, 1, and 2 for some reason
             private = labelToCell["Private"]
-            if private == "2":
+            if private == 2:
                 private = 1
+
+            shared = labelToCell["Shared"]
+            if shared == 2:
+                shared = 1
 
             #print(post_id)
 
