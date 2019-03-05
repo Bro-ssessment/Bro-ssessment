@@ -84,6 +84,11 @@ def parseSheet(filePath, classid):
             content = stripHTML(labelToCell["NoteContents"])
             topic_id = labelToCell["TopicID"]
 
+            # private can equal 0 or 1, the excel sheets have 0, 1, and 2 for some reason
+            private = labelToCell["Private"]
+            if private == "2":
+                private = 1
+
             #print(post_id)
 
             query = Post.insert(post_id=post_id, class_id=class_id, user_id=user_id, title=title, content=content, topic_id=topic_id)
