@@ -34,28 +34,14 @@ def main(begin_post_id=0, batch_size=100):
             # google score
             try:
                 google_score, magnitude = analyze_sentiment_google(content)
-            except Exception:
-                print('{} fail to fetch sentiment score'.format(post_id))
-            # text blob score
-            try:
+                vader_polarity = analyze_sentiment_vader(content)
                 textBlob_polarity = analyze_sentiment_textBlob(content)
-                #result[post_id] = {'post_id': post_id, 'polarity': polarity}
-                #print(result[post_id])
+                #score =  (Decimal(google_score)+ Decimal(textBlob_polarity) + Decimal(vader_polarity))/3
+                score =  (Decimal(textBlob_polarity) + Decimal(vader_polarity))/2
+                result[post_id] = {'post_id': post_id, 'score': score}
+                print(result[post_id])
             except Exception:
                 print('{} fail to fetch sentiment score'.format(post_id))
-
-            # vader score
-            try:
-                vader_polarity = analyze_sentiment(content)
-                #result[post_id] = {'post_id': post_id, 'polarity': polarity}
-                #print(result[post_id])
-            except Exception:
-                print('{} fail to fetch sentiment score'.format(post_id))
-
-            # puts google + blob + vader together as a decimal 
-            score =  Decimal(google_score) + Decimal(textBlob_polarity) + Decimal(vader_polarity)
-            result[post_id] = {'post_id': post_id, 'score': score}
-            print(result[post_id])
 
         # with postgres_db.atomic():
         #     for key, value in result.items():
