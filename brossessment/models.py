@@ -37,6 +37,8 @@ class Post(Model):
     title = TextField()
     content = TextField()
     topic_id = BigIntegerField()
+    private = BooleanField()
+    shared = BooleanField()
 
     class Meta:
         database = postgres_db
