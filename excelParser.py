@@ -78,6 +78,9 @@ def getRowList(wb, symSpell, maxEditDistance):
         if labelToCell["SharedFlag"] != 1 or 0:
             labelToCell["SharedFlag"] = 1
 
+        if labelToCell["WordCount"] == "":
+            labelToCell["WordCount"] = 0
+
         content = labelToCell["NoteContents"]
         if content is None:
             content == ""
@@ -133,10 +136,11 @@ def parseSheet(filePath, classid, symSpell, maxEditDistance):
             topic_id = labelToCell["TopicID"]
             private = labelToCell["Private"]
             shared = labelToCell["SharedFlag"]
+            wordcount = labelToCell["WordCount"]
 
             #print(post_id)
 
-            query = Post.insert(post_id=post_id, class_id=class_id, user_id=user_id, title=title, content=content, topic_id=topic_id, private=private, shared=shared)
+            query = Post.insert(post_id=post_id, class_id=class_id, user_id=user_id, title=title, content=content, topic_id=topic_id, private=private, shared=shared, wordcount=wordcount)
             query.execute()
 
     with postgres_db.atomic():
