@@ -47,10 +47,6 @@ def spellCheck(symSpell, maxEditDistance, string):
     #print(suggestions[0].term)
     return suggestions[0].term
 
-def cleanContent(symSpell, maxEditDistance, content):
-    content = stripHTML(content)
-    content = spellCheck(symSpell, maxEditDistance, content)
-
 def getRowList(wb, symSpell, maxEditDistance):
     sheet = wb.sheet_by_index(2)
     labels = getSheetLabels(sheet)
@@ -87,9 +83,10 @@ def getRowList(wb, symSpell, maxEditDistance):
             content == ""
             labelToCell["NoteContents"] = ""
 
-        print(labelToCell["NoteID"])
+        content = stripHTML(content)
+        if symSpell is not None:
+            content = spellCheck(symSpell, maxEditDistance, content)
 
-        content = cleanContent(symSpell, maxEditDistance, content)
         labelToCell["NoteContents"] = content
         labelToCellList.append(labelToCell)
 
@@ -129,7 +126,6 @@ def parseSheet(filePath, classid, symSpell, maxEditDistance):
             user_id = labelToCell["PersonID"]
             # Get post values
             post_id = labelToCell["NoteID"]
-            print(post_id)
             class_id = classid
             #build_on = labelToCell["BuildsOn"]
             title = labelToCell["Title"]
@@ -148,7 +144,6 @@ def parseSheet(filePath, classid, symSpell, maxEditDistance):
             builds_on = labelToCell["BuildsOn"]
             if builds_on is not None and builds_on != 0:
                 post_id = labelToCell["NoteID"]
-                print
                 query = Post.update(builds_on=builds_on).where(Post.post_id==post_id)
                 query.execute()
 
@@ -156,17 +151,21 @@ def parseSheet(filePath, classid, symSpell, maxEditDistance):
 
 def main(argv):
 
-    if len(argv) != 1:
+    if len(argv) > 1:
         print("correct usage is python excelParser.py *maxEditDistanceInterger*")
         return -1
-    else:
+    elif len(argv) == 1:
         maxEditDistance = int(argv[0])
+        symSpell = initializeSymSpell(maxEditDistance)
+
+    else:
+        maxEditDistance=0
+        symSpell=None
 
     rowList = []
     path = os.path.join('spreadsheets')
     classid = 0
 
-    symSpell = initializeSymSpell(maxEditDistance)
     for root, dirs, files in os.walk(path):
         for filename in files:
             tstart = datetime.now()
@@ -177,7 +176,7 @@ def main(argv):
             tend = datetime.now()
             time = tend - tstart
             print("Finished")
-            print(time.seconds)
+            print("It took " + str(time.seconds) + " seconds.")
             print()
             # rowList.append(row)
 
