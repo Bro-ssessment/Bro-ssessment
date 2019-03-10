@@ -102,3 +102,16 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Google API key
+credentials.json
+
+# PeppeR data
+!data/syllabus/.gitkeep
+*.pdf
+*.docx
+*.doc
+*.txt
+*.mm
+*.dict
+*.index

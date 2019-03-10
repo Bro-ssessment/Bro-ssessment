@@ -34,6 +34,7 @@ class Post(Model):
     google_sentiment_magnitude = FloatField()
     textblob_sentiment_score = FloatField()
     vader_sentiment_score = FloatField()
+    lsi_similarity_score = FloatField()
     title = TextField()
     content = TextField()
     topic_id = BigIntegerField()
