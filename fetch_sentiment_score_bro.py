@@ -36,23 +36,29 @@ def main(begin_post_id=0, batch_size=100):
                 google_score, magnitude = analyze_sentiment_google(content)
                 vader_polarity = analyze_sentiment_vader(content)
                 textBlob_polarity = analyze_sentiment_textBlob(content)
-                score =  (Decimal(google_score)+ Decimal(textBlob_polarity) + Decimal(vader_polarity))/3
+                score =  ((google_score)+ (textBlob_polarity) + (vader_polarity))/3
                 #score =  (Decimal(textBlob_polarity) + Decimal(vader_polarity))/2
-                result[post_id] = {'post_id': post_id, 'score': score}
+                result[post_id] = {'post_id': post_id, 'score': score, 'google_sentiment_score': google_score, 'google_sentiment_magnitude': magnitude, 'vader_sentiment_score': vader_polarity, 'textblob_sentiment_score': textBlob_polarity}
                 print(result[post_id])
             except Exception:
                 print('{} fail to fetch sentiment score'.format(post_id))
 
-        # with postgres_db.atomic():
-        #     for key, value in result.items():
-        #         query = Post.update(
-        #             bro_sentiment_score=value['score'],
-        #
-        #         ).where(Post.post_id == key)
-        #         query.execute()
-        #
-        # time.sleep(5)  # take a break to prevent rate limit
-        # begin_post_id = current_chunk[-1].post_id
+        with postgres_db.atomic():
+            for key, value in result.items():
+                query = Post.update(
+                    bro_sentiment=value['score'],
+                    google_sentiment_score=value['google_sentiment_score'],
+                    google_sentiment_magnitude=value['google_sentiment_magnitude'],
+                    textblob_sentiment_score=value['textblob_sentiment_score'],
+                    vader_sentiment_score=value['vader_sentiment_score'],
+
+
+
+                ).where(Post.post_id == key)
+                query.execute()
+
+        time.sleep(5)  # take a break to prevent rate limit
+        begin_post_id = current_chunk[-1].post_id
 
 
 def analyze_sentiment_google(content):
