@@ -35,6 +35,7 @@ class Post(Model):
     textblob_sentiment_score = FloatField()
     vader_sentiment_score = FloatField()
     lsi_similarity_score = FloatField()
+    bro_sentiment = FloatField()
     title = TextField()
     content = TextField()
     topic_id = BigIntegerField()
