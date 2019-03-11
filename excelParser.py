@@ -7,6 +7,10 @@ from bs4 import BeautifulSoup
 from symspellpy.symspellpy import SymSpell
 from brossessment.models import *
 
+# Usage: python excelParser.py <optional integer from 1-4>
+#        only use the integer if you would like to run spellcheck on the note NoteContents.
+#        the higher the integer the better the spell check accuracy but the longer it will take.
+
 # Funtion to get the column lables
 # Takes a xlrd sheet object as a parameter
 # returns a list of strings
