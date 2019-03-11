@@ -36,8 +36,8 @@ def main(begin_post_id=0, batch_size=100):
                 google_score, magnitude = analyze_sentiment_google(content)
                 vader_polarity = analyze_sentiment_vader(content)
                 textBlob_polarity = analyze_sentiment_textBlob(content)
-                #score =  (Decimal(google_score)+ Decimal(textBlob_polarity) + Decimal(vader_polarity))/3
-                score =  (Decimal(textBlob_polarity) + Decimal(vader_polarity))/2
+                score =  (Decimal(google_score)+ Decimal(textBlob_polarity) + Decimal(vader_polarity))/3
+                #score =  (Decimal(textBlob_polarity) + Decimal(vader_polarity))/2
                 result[post_id] = {'post_id': post_id, 'score': score}
                 print(result[post_id])
             except Exception:
