@@ -41,7 +41,8 @@ class Post(Model):
     topic_id = BigIntegerField()
     private = BooleanField()
     shared = BooleanField()
-
+    wordcount = BigIntegerField()
+    
     class Meta:
         database = postgres_db
         table_name = 'posts'

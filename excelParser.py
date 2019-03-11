@@ -7,6 +7,10 @@ from bs4 import BeautifulSoup
 from symspellpy.symspellpy import SymSpell
 from brossessment.models import *
 
+# Usage: python excelParser.py <optional integer from 1-4>
+#        only use the integer if you would like to run spellcheck on the note NoteContents.
+#        the higher the integer the better the spell check accuracy but the longer it will take.
+
 # Funtion to get the column lables
 # Takes a xlrd sheet object as a parameter
 # returns a list of strings
@@ -78,6 +82,9 @@ def getRowList(wb, symSpell, maxEditDistance):
         if labelToCell["SharedFlag"] != 1 or 0:
             labelToCell["SharedFlag"] = 1
 
+        if labelToCell["WordCount"] == "":
+            labelToCell["WordCount"] = 0
+
         content = labelToCell["NoteContents"]
         if content is None:
             content == ""
@@ -133,10 +140,11 @@ def parseSheet(filePath, classid, symSpell, maxEditDistance):
             topic_id = labelToCell["TopicID"]
             private = labelToCell["Private"]
             shared = labelToCell["SharedFlag"]
+            wordcount = labelToCell["WordCount"]
 
             #print(post_id)
 
-            query = Post.insert(post_id=post_id, class_id=class_id, user_id=user_id, title=title, content=content, topic_id=topic_id, private=private, shared=shared)
+            query = Post.insert(post_id=post_id, class_id=class_id, user_id=user_id, title=title, content=content, topic_id=topic_id, private=private, shared=shared, wordcount=wordcount)
             query.execute()
 
     with postgres_db.atomic():
