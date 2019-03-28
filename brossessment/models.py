@@ -42,6 +42,9 @@ class Post(Model):
     private = BooleanField()
     shared = BooleanField()
     wordcount = BigIntegerField()
+    verbs = FloatField()
+    nouns = FloatField()
+    adjectives = FloatField()
     
     class Meta:
         database = postgres_db

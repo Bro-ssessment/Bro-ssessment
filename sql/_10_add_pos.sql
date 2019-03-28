@@ -1,0 +1,3 @@
+ALTER TABLE posts ADD COLUMN verbs REAL;
+ALTER TABLE posts ADD COLUMN nouns REAL;
+ALTER TABLE posts ADD COLUMN adjectives REAL;
