@@ -36,17 +36,27 @@ def main(begin_post_id=0, batch_size=100):
             print(result[post_id])
 
         with postgres_db.atomic():
+            print('these are teh results')
+            print(result)
+            print(result.items())
+            print(result.keys())
             for key, value in result.items():
+                print('this is the key')
+                print(key)
+                print('this is the value')
+                print(value)
+                print(value['verbs'])
                 try:
                     query = Post.update(
-                        verbs=pos_dict['verbs'],
-                        nouns=pos_dict['nouns'],
-                        adjectives=pos_dict['adjectives']
+                        verbs=value['verbs'],
+                        nouns=value['nouns'],
+                        adjectives=value['adjectives']
                     ).where(Post.post_id == key)
-                    query.execute()
+                    #query.execute()
                     print("successfully added to ")
                     print(post_id)
-                except Exception:
+                except Exception as e:
+                    print(e)
                     print('failed to add pos tag to ')
                     print(post_id)
                     continue
