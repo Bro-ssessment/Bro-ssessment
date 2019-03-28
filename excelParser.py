@@ -195,7 +195,7 @@ def main(argv):
         symSpell=None
 
     rowList = []
-    path = os.path.join('spreadsheets')
+    path = os.path.join('data','spreadsheets')
     classid = 0
 
     for root, dirs, files in os.walk(path):
