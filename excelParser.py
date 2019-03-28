@@ -31,6 +31,26 @@ def stripHTML(HTMLstring):
     strippedString = soup.get_text()
     return strippedString
 
+def fixPrivate(filePath):
+    wb = open_workbook(filePath)
+    labelToCellList = getRowList(wb, None, 0)
+
+    with postgres_db.atomic():
+        for labelToCell in labelToCellList:
+            #if user DNE create user
+
+            post = labelToCell["NoteID"]
+            private = labelToCell["Private"]
+
+            #print('building query')
+            if not private:
+                query = (Post.update({Post.private: private}).where(Post.post_id == post))
+
+                query.execute()
+            #print('execute query')
+
+    return
+
 def initializeSymSpell(maxEditDistance):
     # this variable can be between 5-7, the hgiher the faster the aglorithim runs but the more memory consumption
     prefixLength = 7
@@ -76,11 +96,15 @@ def getRowList(wb, symSpell, maxEditDistance):
             labelToCell["BuildsOn"] == None
 
         # private can equal 0 or 1, the excel sheets have 0, 1, and 2 for some reason
-        if labelToCell["Private"] != 1 or 0:
-            labelToCell["Private"] = 1
+        if labelToCell["Private"] == 0:
+            labelToCell["Private"] = False
+        else:
+            labelToCell["Private"] = True
 
-        if labelToCell["SharedFlag"] != 1 or 0:
-            labelToCell["SharedFlag"] = 1
+        if labelToCell["SharedFlag"] == 0:
+            labelToCell["SharedFlag"] = False
+        else:
+            labelToCell["SharedFlag"] = True
 
         if labelToCell["WordCount"] == "":
             labelToCell["WordCount"] = 0
