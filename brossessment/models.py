@@ -45,7 +45,7 @@ class Post(Model):
     verbs = FloatField()
     nouns = FloatField()
     adjectives = FloatField()
-    
+
     class Meta:
         database = postgres_db
         table_name = 'posts'

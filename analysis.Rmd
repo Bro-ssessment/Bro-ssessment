@@ -1,0 +1,78 @@
+---
+title: "Analysis"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load libraries and data
+
+Loading all neccessary libraries.
+
+```{r}
+# install.packages("simr")
+# install.packages("lme4")
+# install.packages("car")
+# install.packages("sjPlot")
+library(simr)
+library(lme4)
+library(car)
+library(knitr)
+library(sjPlot)
+library(xtable)
+df <- read.csv('data/features.csv', header=TRUE, sep=',')
+```
+
+## Run model
+
+### Baseline
+
+```{r echo = FALSE}
+baseline = lmer(avg_ccs ~ (1|user_id), data=df, REML=FALSE)
+summary(baseline)
+```
+
+### Model 1
+
+```{r echo = FALSE}
+baseline = lmer(avg_ccs ~ (1|user_id), data=df, REML=FALSE)
+m1 = lmer(avg_ccs ~  bro_sentiment + (1|user_id), data=df)
+summary(m1)
+```
+
+### Model 2
+
+```{r echo = FALSE}
+m2 = lmer(avg_ccs ~ lsi_similarity_score + bro_sentiment + private + verbs + nouns + adjectives + (1|user_id), data=df)
+summary(m2)
+```
+
+### Model 3
+
+```{r echo = FALSE}
+m3 = lmer(avg_ccs ~ lsi_similarity_score + bro_sentiment + private + verbs + nouns + adjectives + word_zscore + (1|user_id), data=df)
+summary(m3)
+```
+
+## Results and Analysis
+
+Conduct annova test for each mixed model.
+We can tell which model is better by comparing the deviance, lower the better.
+
+```{r echo = FALSE}
+tab_model(m1, m2, m3)
+```
+
+ANOVA table of baseline and 3 other models
+
+```{r echo = FALSE}
+xtable(anova(m1, m2, m3), digits=3) # print APA style table in LaTex
+```
+
+Power analysis for model 2, nouns
+
+```{r}
+powerSim(m2, test=fixed("nouns"), nsim=1000)
+```
