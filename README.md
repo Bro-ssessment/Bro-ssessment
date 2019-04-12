@@ -39,6 +39,21 @@ Run the off topic analysis.py
 $ python off_topic_analysis.py
 ```
 
+### Parse CCS result
+
+```sh
+$ python misc/extract_ccs.py
+```
+
+### Produce features.csv for modeling
+
+```sh
+# Run the script, and the csv file will be avaliable inside the /data folder
+$ python extract_features.py
+```
+
+Then you may use the `analysis.Rmd` file to train the model.
+
 ## Development
 
 ```sh
