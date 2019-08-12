@@ -1,0 +1,15 @@
+version: "3"
+services:
+  brosessment:
+    image: "postgres:latest"
+    container_name: "bro"
+    ports:
+      - "54320:5432"
+    volumes:
+      - bro_data:/var/lib/postgresql/data
+    environment: 
+      POSTGRES_USER: 'yonael'
+      POSTGRES_PASSWORD: 'password'
+      POSTGRES_DB: 'brosessment' 
+volumes:
+  bro_data:
